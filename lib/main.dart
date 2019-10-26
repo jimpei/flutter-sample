@@ -27,8 +27,18 @@ class MyHomePage extends StatefulWidget { // StatefulWidget. 状態がある. �
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+class Issue {
+  Issue({
+    this.title,
+    this.avatarUrl,
+  });
+
+  final String title;
+  final String avatarUrl;
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> _titles = <String>[];
+  List<Issue> _issues = <Issue>[];
 
   // initState は、このオブジェクトが画面（Widget tree）に追加された時に呼び出され、
   // 初期化処理などを記述できます
@@ -50,7 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
       final issues = data as List;
       issues.forEach((dynamic element) {
         final issue = element as Map;
-        _titles.add(issue['title'] as String);
+        _issues.add(Issue(
+          title: issue['title'] as String,
+          avatarUrl: issue['user']['avatar_url'] as String,
+        ));
       });
     });
   }
@@ -65,12 +78,17 @@ class _MyHomePageState extends State<MyHomePage> {
         //リストの表示には ListView というWidgetを使います。 '
         // ListView.builder は、 ListView のクラスの名前付きコンストラクタです。
           itemBuilder: (BuildContext context, int index) {
-            if (index >= _titles.length) {
+            if (index >= _issues.length) {
               return null;
             }
 
+            final issue = _issues[index];
             return ListTile(
-              title: Text(_titles[index]),
+              leading: ClipOval(
+                // ClipOval は child を円形にクリップして表示するwidgetで、これにより画像を丸く切り取って表示しています。
+                child: Image.network(issue.avatarUrl),
+              ),
+              title: Text(issue.title),
             );
       }),
     );
