@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -26,22 +27,23 @@ class MyHomePage extends StatefulWidget { // StatefulWidget. 状態がある. �
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-//  int _counter = 0;
-//
-//  void _incrementCounter() {
-//    setState(() {
-//      //  setState メソッドの呼び出しによって、Flutterフレームワークに対して「状態が変わった」ことが伝わります。
-//      //  Flutterフレームワークは、このあとで build メソッドを呼び出すことで画面を最新の状態に更新します。
-//
-//      // This call to setState tells the Flutter framework that something has
-//      // changed in this State, which causes it to rerun the build method below
-//      // so that the display can reflect the updated values. If we changed
-//      // _counter without calling setState(), then the build method would not be
-//      // called again, and so nothing would appear to happen.
-//      _counter += 2;
-////      _counter++;
-//    });
-//  }
+  String _data = '';
+
+  // initState は、このオブジェクトが画面（Widget tree）に追加された時に呼び出され、
+  // 初期化処理などを記述できます
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final res = await http.get('https://api.github.com/repositories/31792824/issues');
+    // setState によって状態が変わったことをFlutterに伝える
+    setState(() {
+      _data = res.body;
+    });
+  }
 
   @override
   Widget build(BuildContext context) { // ここの戻り値が画面に表示される
@@ -49,9 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Text(
-        '空っぽの画面'
-      ),
+      body: Text(_data),
     );
   }
 }
