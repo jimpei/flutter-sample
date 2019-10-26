@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,7 +28,7 @@ class MyHomePage extends StatefulWidget { // StatefulWidget. 状態がある. �
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _data = '';
+  List<String> _titles = <String>[];
 
   // initState は、このオブジェクトが画面（Widget tree）に追加された時に呼び出され、
   // 初期化処理などを記述できます
@@ -39,9 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _load() async {
     final res = await http.get('https://api.github.com/repositories/31792824/issues');
+    final data = json.decode(res.body);
+
     // setState によって状態が変わったことをFlutterに伝える
     setState(() {
-      _data = res.body;
+      // API全体は List 、各要素は Map 、その中の title がタイトルです。
+      // json.decodeの戻り値は型が dynamic と定まっていない（JSONの形式は不定なため）ので、
+      // as キーワードによって List や Map にキャストしています。
+      final issues = data as List;
+      issues.forEach((dynamic element) {
+        final issue = element as Map;
+        _titles.add(issue['title'] as String);
+      });
     });
   }
 
@@ -51,7 +61,18 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Text(_data),
+      body: ListView.builder(
+        //リストの表示には ListView というWidgetを使います。 '
+        // ListView.builder は、 ListView のクラスの名前付きコンストラクタです。
+          itemBuilder: (BuildContext context, int index) {
+            if (index >= _titles.length) {
+              return null;
+            }
+
+            return ListTile(
+              title: Text(_titles[index]),
+            );
+      }),
     );
   }
 }
