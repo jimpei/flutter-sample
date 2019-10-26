@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { // StatelessWidget を継承しており、 Widget である
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) { // ここの戻り値が画面に表示される
+    return MaterialApp( // マテリアルデザインのアプリを作るために便利なWidget
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -18,14 +18,14 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget { // StatefulWidget. 状態がある. 状態は_MyHomePageState
   MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -48,24 +48,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
+      //  setState メソッドの呼び出しによって、Flutterフレームワークに対して「状態が変わった」ことが伝わります。
+      //  Flutterフレームワークは、このあとで build メソッドを呼び出すことで画面を最新の状態に更新します。
+
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      _counter += 2;
+//      _counter++;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // ここの戻り値が画面に表示される
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
+    return Scaffold( // 典型的な画面レイアウトを構築する便利なWidget
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -92,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'ボタンを押した回数:',
             ),
             Text(
               '$_counter',
